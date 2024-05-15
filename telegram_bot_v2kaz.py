@@ -93,7 +93,7 @@ async def handle_voice_message(message: types.Message):
                 logger.info(f"Deleted file {mp3_audio_path}.")
 
     else:
-        await message.answer(text='Демонстрацияның бөлігі ретінде «қызыл мамыр» сөзі бар сөйлемді айтыңыз.\n Сондай-ақ операцияның демонстрациялық бейнесін келесі сілтемеден көре аласыз:\nhttps://youtube.com/shorts/6pJ04x-M-XQ')
+        await message.answer(text='Демонстрацияның бөлігі ретінде «қызыл май» сөзі бар сөйлемді айтыңыз.\n Сондай-ақ операцияның демонстрациялық бейнесін келесі сілтемеден көре аласыз:\nhttps://youtube.com/shorts/6pJ04x-M-XQ')
 
 def format_response(data):
     """Форматирование данных API в строку ответа."""
