@@ -35,14 +35,14 @@ def fetch_medicine_info():
         'origin': 'https://daribar.kz',
         'referer': 'https://daribar.kz/'
     }
-    data = '[{"sku":"75c9de5e-0669-41b0-b07b-d6d545c6711a","count_desired":1}]'  # Пример данных запроса
+    data = '[{"sku":"75c9de5e-0669-41b0-b07b-d6d545c6711a","count_desired":1}]'
     response = requests.post(url, headers=headers, data=data)
     return response.json()
 
 
 @router.message(CommandStart())
 async def process_start_command(message: types.Message):
-    await message.answer('Сәлеметсіз бе! Маған дәрінің аты жазылған дауыстық поштаны жіберіңіз.')
+    await message.answer('Сәлеметсіз бе! Маған дәрі-дәрмектің аты жазылған дауыстық поштаны жіберіңіз.\n Сондай-ақ операцияның демонстрациялық бейнесін келесі сілтемеден көре аласыз:\nhttps://youtube.com/shorts/6pJ04x-M-XQ')
 
 
 @router.message(F.voice)
@@ -93,7 +93,7 @@ async def handle_voice_message(message: types.Message):
                 logger.info(f"Deleted file {mp3_audio_path}.")
 
     else:
-        await message.answer(text='Демонстрацияның бөлігі ретінде «қызыл мамыр» сөзі бар сөйлемді айтыңыз')
+        await message.answer(text='Демонстрацияның бөлігі ретінде «қызыл мамыр» сөзі бар сөйлемді айтыңыз.\n Сондай-ақ операцияның демонстрациялық бейнесін келесі сілтемеден көре аласыз:\nhttps://youtube.com/shorts/6pJ04x-M-XQ')
 
 def format_response(data):
     """Форматирование данных API в строку ответа."""
