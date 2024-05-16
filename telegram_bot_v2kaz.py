@@ -60,40 +60,51 @@ async def handle_voice_message(message: types.Message):
                 logger.error(f"Failed to download file: HTTP status {response.status}")
                 return
 
-    speech_text = recognize_speech(file_content)
-    response_text = await process_question(speech_text)
-    logger.info(f"Response text from GPT: {response_text}")
+    try:
+        speech_text = recognize_speech(file_content)
+        response_text = await process_question(speech_text)
+        logger.info(f"Response text from GPT: {response_text}")
 
-    # Получение данных о лекарствах и форматирование ответа
-    if response_text.lower().strip() == 'кызылмай' or response_text.lower().strip() == 'кызыл май':
-        api_response = fetch_medicine_info()
-        formatted_response = format_response(api_response)
-        logger.info(f"Formatted response for synthesis: {formatted_response}")
+        # Получение данных о лекарствах и форматирование ответа
+        if response_text.lower().strip() == 'кызылмай' or response_text.lower().strip() == 'кызыл май':
+            api_response = fetch_medicine_info()
+            formatted_response = format_response(api_response)
+            logger.info(f"Formatted response for synthesis: {formatted_response}")
 
-        # Перевод сформированного ответа на казахский язык
-        translated_text = translate_text(formatted_response, source_lang='ru', target_lang='kk')
-        logger.info(f"Translated text: {translated_text}")
+            # Перевод сформированного ответа на казахский язык
+            translated_text = translate_text(formatted_response, source_lang='ru', target_lang='kk')
+            logger.info(f"Translated text: {translated_text}")
 
-        # Синтез речи из переведенного текста
-        audio_response_bytes = synthesize_speech(translated_text)
+            # Синтез речи из переведенного текста
+            audio_response_bytes = synthesize_speech(translated_text)
 
-        mp3_audio_path = "response.mp3"
-        with open(mp3_audio_path, "wb") as mp3_audio_file:
-            mp3_audio_file.write(audio_response_bytes)
+            mp3_audio_path = "response.mp3"
+            with open(mp3_audio_path, "wb") as mp3_audio_file:
+                mp3_audio_file.write(audio_response_bytes)
 
-        try:
-            await message.answer_voice(voice=types.FSInputFile(mp3_audio_path), caption=translated_text)
-            logger.info("Voice response sent successfully.")
-        except Exception as e:
-            logger.error(f"Failed to send voice response: {e}")
-            await message.answer("Failed to send the voice response.")
-        finally:
-            if os.path.exists(mp3_audio_path):
-                os.remove(mp3_audio_path)
-                logger.info(f"Deleted file {mp3_audio_path}.")
+            try:
+                await message.answer_voice(voice=types.FSInputFile(mp3_audio_path), caption=translated_text)
+                logger.info("Voice response sent successfully.")
+            except Exception as e:
+                logger.error(f"Failed to send voice response: {e}")
+                await message.answer("Failed to send the voice response.")
+            finally:
+                if os.path.exists(mp3_audio_path):
+                    os.remove(mp3_audio_path)
+                    logger.info(f"Deleted file {mp3_audio_path}.")
 
-    else:
-        await message.answer(text='Демонстрацияның бөлігі ретінде «қызыл май» сөзі бар сөйлемді айтыңыз.\n Сондай-ақ операцияның демонстрациялық бейнесін келесі сілтемеден көре аласыз:\nhttps://youtube.com/shorts/6pJ04x-M-XQ')
+        else:
+            await message.answer(
+                text='Демонстрацияның бөлігі ретінде «қызыл май» сөзі бар сөйлемді айтыңыз.\n Сондай-ақ операцияның демонстрациялық бейнесін келесі сілтемеден көре аласыз:\nhttps://youtube.com/shorts/6pJ04x-M-XQ')
+
+    except Exception as e:
+        logger.error(f"Failed to send voice: {e}")
+        await message.answer(
+            text='Техникалық себептерге байланысты сұраныс өңделмеді.\nДегенмен, операцияның демонстрациялық бейнесін келесі сілтемеден көре аласыз:\nhttps://youtube.com/shorts/6pJ04x-M-XQ')
+
+
+
+
 
 def format_response(data):
     """Форматирование данных API в строку ответа."""
