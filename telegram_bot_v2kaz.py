@@ -58,7 +58,7 @@ def fetch_medicine_info(sku):
 
 @router.message(CommandStart())
 async def process_start_command(message: types.Message):
-    await message.answer('Сәлеметсіз бе! Маған бір дәрі-дәрмектің атауы бар дауыстық хабарлама жіберіңіз (демонстрацияға рұқсат етілген дәрілік нұсқалар: ибупрофен, анальгин, аспирин, қызыл май).\nСонымен қатар демонстрациялық бейнені мына сілтемеден көре аласыз:\nhttps://youtube .com/shorts /6pJ04x-M-XQ')
+    await message.answer('Сәлеметсіз бе! Маған бір дәрі-дәрмектің атауы бар дауыстық хабарлама жіберіңіз (демонстрацияға рұқсат етілген дәрілік нұсқалар: ибупрофен, анальгин, аспирин, қызыл май).\nСонымен қатар демонстрациялық бейнені мына сілтемеден көре аласыз:\nhttps://youtube.com/shorts/6pJ04x-M-XQ')
 
 @router.message(F.voice)
 async def handle_voice_message(message: types.Message):
